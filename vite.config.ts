@@ -9,6 +9,7 @@ import autoprefixer from 'autoprefixer';
 import {resolve} from 'path';
 import {existsSync} from 'fs';
 import {ServerOptions} from 'vite';
+import {nodePolyfills} from 'vite-plugin-node-polyfills';
 
 const rootDir = resolve(__dirname);
 
@@ -112,7 +113,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         sourcemapIgnoreList: serverOptions.sourcemapIgnoreList
-      }
+      },
+      plugins: [
+        nodePolyfills()
+      ]
       // input: {
       //   main: './index.html',
       //   sw: './src/index.service.ts'

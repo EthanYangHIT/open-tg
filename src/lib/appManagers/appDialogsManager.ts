@@ -2267,7 +2267,7 @@ export class AppDialogsManager {
     addFiltersPromise && await m(addFiltersPromise);
     // this.folders.menu.children[0].classList.add('active');
 
-    this.renderStories();
+    // this.renderStories();
     this.doNotRenderChatList = undefined;
 
     this.filterId = -1;

@@ -21,6 +21,10 @@ declare global {
     dpr?: number
   }
 
+  interface Window {
+    phantom?: any
+  }
+
   interface HTMLElement {
     middlewareHelper?: MiddlewareHelper;
     timeAppenders?: {element: HTMLElement, callback: () => void}[];

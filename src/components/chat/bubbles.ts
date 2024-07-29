@@ -185,6 +185,8 @@ import safeWindowOpen from '../../helpers/dom/safeWindowOpen';
 import findAndSplice from '../../helpers/array/findAndSplice';
 import generatePhotoForExtendedMediaPreview from '../../lib/appManagers/utils/photos/generatePhotoForExtendedMediaPreview';
 import icon from '../icon';
+import {detectSolanaAction} from '../../lib/richTextProcessor/solanaBlink';
+import SolanaActionBox from '../wrappers/solanaActionBox';
 
 export const USER_REACTIONS_INLINE = false;
 export const TEST_BUBBLES_DELETION = false;
@@ -5968,13 +5970,28 @@ export default class ChatBubbles {
         case 'messageMediaWebPage': {
           noAttachmentDivNeeded = true;
           attachmentDiv = undefined;
-
           const webPage: WebPage = messageMedia.webpage;
           if(webPage._ !== 'webPage') {
             break;
           }
 
           processedWebPage = true;
+
+          const solanaActionRes = await detectSolanaAction(webPage.url)
+          if(solanaActionRes) {
+            // is actions
+            createRoot((dispose) => {
+              middleware.onDestroy(dispose);
+              SolanaActionBox({
+                ...solanaActionRes,
+                ref: (box) => {
+                  messageDiv.prepend(box);
+                }
+              });
+            });
+            break;
+          }
+
           const storyAttribute = webPage.attributes?.find((attribute) => attribute._ === 'webPageAttributeStory') as WebPageAttribute.webPageAttributeStory;
           const storyPeerId = storyAttribute && getPeerId(storyAttribute.peer);
           const storyId = storyAttribute?.id;
