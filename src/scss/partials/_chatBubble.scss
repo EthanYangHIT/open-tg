@@ -1203,6 +1203,13 @@
     &.margin-bigger {
       margin: $message-padding-horizontal;
     }
+
+    .text-warning {
+      background-color: bisque;
+      color: var(--primary-text-color);
+      font-weight: var(--font-weight-bold);
+      font-style: normal;
+    }
   }
 
   .next-is-message {
@@ -2048,12 +2055,20 @@
   }
 
   &-name-rank {
-    color: var(--message-time-color);
+    color: var(--message-empty-primary-color);
     font-weight: var(--font-weight-normal);
     font-size: var(--messages-time-text-size);
-    padding-inline-start: .25rem;
-    margin-left: auto;
+    padding-inline-start: .3rem;
+    padding-inline-end: .3rem;
+    margin-left: .25rem;
+    border-radius: 8rem;
+    background-color: var(--primary-color);
     order: 999;
+    display: flex;
+    align-items: center;
+    &-icon {
+      margin-right: .25rem;
+    }
     @include text-overflow();
   }
 

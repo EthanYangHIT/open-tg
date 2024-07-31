@@ -187,6 +187,7 @@ import generatePhotoForExtendedMediaPreview from '../../lib/appManagers/utils/ph
 import icon from '../icon';
 import {detectSolanaAction} from '../../lib/richTextProcessor/solanaBlink';
 import SolanaActionBox from '../wrappers/solanaActionBox';
+import parseEntities from '../../lib/richTextProcessor/parseEntities';
 
 export const USER_REACTIONS_INLINE = false;
 export const TEST_BUBBLES_DELETION = false;
@@ -7355,6 +7356,22 @@ export default class ChatBubbles {
       this.observer.observe(bubble, this.messageEffectObserverCallback);
     }
 
+    console.log('debug here: ')
+
+    // detect sensitive words
+    if(!this.chat.isAnyGroup && !isOut) {
+      const entities = parseEntities(messageMessage);
+      const sensitiveEntities = entities.filter(entity => entity._ === 'messageEntitySensitiveWords');
+      console.log('sensitiveEntities: ', sensitiveEntities)
+      if(sensitiveEntities.length) {
+        console.log('contentWrapper: ', contentWrapper)
+        wrapRichText(messageMessage, {entities: sensitiveEntities});
+        const elem = document.createElement('div');
+        elem.innerText = '⚠️检测到敏感词，请注意防范';
+        contentWrapper.append(elem);
+      }
+    }
+
     return ret;
   }
 
@@ -7574,6 +7591,7 @@ export default class ChatBubbles {
     const span = document.createElement('span');
     span.classList.add('bubble-name-rank');
     span.append(wrapParticipantRank(rank));
+    span.prepend(Icon('admin', 'bubble-name-rank-icon'));
     return span;
   }
 

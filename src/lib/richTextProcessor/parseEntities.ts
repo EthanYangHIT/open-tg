@@ -101,8 +101,15 @@ export default function parseEntities(text: string) {
         length: 1 + match[13].length + (match[14] ? 1 + match[14].length : 0),
         unsafe: true
       });
-    } else if(match[16]) { // Media timestamp
-      const timestamp = match[16];
+    } else if(match[16]) { // Sensitive words
+      const sensitiveWords = match[16];
+      entities.push({
+        _: 'messageEntitySensitiveWords',
+        offset: matchIndex,
+        length: sensitiveWords.length
+      })
+    } else if(match[17]) { // Media timestamp
+      const timestamp = match[17];
       const splitted: string[] = timestamp.split(':');
       const splittedLength = splitted.length;
       const hours = splittedLength === 3 ? +splitted[0] : 0;

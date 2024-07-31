@@ -708,6 +708,12 @@ export default function wrapRichText(text: string, options: WrapRichTextOptions 
         processingBlockElement = true;
         break;
       }
+
+      case 'messageEntitySensitiveWords': {
+        element = document.createElement('i');
+        element.className = 'text-warning';
+        break;
+      }
     }
 
     if(processingBlockElement) {
