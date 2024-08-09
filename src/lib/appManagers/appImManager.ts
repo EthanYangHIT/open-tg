@@ -132,6 +132,7 @@ import {setQuizHint} from '../../components/poll';
 import anchorCallback from '../../helpers/dom/anchorCallback';
 import PopupPremium from '../../components/popups/premium';
 import safeWindowOpen from '../../helpers/dom/safeWindowOpen';
+import {urlParseHashParams, urlParseQueryString} from '../../helpers/telegram-webapp';
 
 export type ChatSavedPosition = {
   mids: number[],
@@ -865,6 +866,97 @@ export class AppImManager extends EventListenerBase<{
 
     try {
       const webViewResultUrl = await this.managers.appAttachMenuBotsManager.requestWebView(options as RequestWebViewOptions);
+      // let locationHash: string;
+      // try {
+      //   locationHash = new URL(webViewResultUrl.url).hash.toString();
+      // } catch(e) {}
+      // const initParams = urlParseHashParams(locationHash);
+      // const webAppInitDataUnsafe = urlParseQueryString(initParams.tgWebAppData);
+      // console.log('webAppInitDataUnsafe: ', webAppInitDataUnsafe)
+      // console.log('initParams: ', initParams)
+      // console.log('webViewResultUrl: ', webViewResultUrl.url)
+      // const res = await fetch('https://walletbot.me/api/v1/users/auth/', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     web_view_init_data: webAppInitDataUnsafe,
+      //     web_view_init_data_raw: initParams.tgWebAppData,
+      //     ep: 'menu'
+      //   })
+      // });
+      // const resJson = await res.json();
+      // console.log('resJson: ', resJson);
+      // await fetch('https://walletbot.me/v2api/recovery-email/request-code', {
+      //   'headers': {
+      //     'accept': 'application/json, text/plain, */*',
+      //     'accept-language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7',
+      //     'authorization': `Bearer ${resJson.value}`,
+      //     'cache-control': 'no-cache',
+      //     'content-type': 'application/json',
+      //     'pragma': 'no-cache',
+      //     'priority': 'u=1, i',
+      //     'sec-ch-ua': '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+      //     'sec-ch-ua-mobile': '?0',
+      //     'sec-ch-ua-platform': '"macOS"',
+      //     'sec-fetch-dest': 'empty',
+      //     'sec-fetch-mode': 'cors',
+      //     'sec-fetch-site': 'same-origin'
+      //   },
+      //   'referrer': 'https://walletbot.me/scw/import/existing?backPath=none',
+      //   'referrerPolicy': 'strict-origin-when-cross-origin',
+      //   'body': '{"product":"ton-space","email":"ya**t@gmail.com","reason":"get-recovery-key","language":"en"}',
+      //   'method': 'POST',
+      //   'mode': 'cors',
+      //   'credentials': 'include'
+      // });
+      // await fetch('https://walletbot.me/scwapi/adresses/recover', {
+      //   'headers': {
+      //     'accept': 'application/json, text/plain, */*',
+      //     'accept-language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7',
+      //     'cache-control': 'no-cache',
+      //     'content-type': 'application/json',
+      //     'pragma': 'no-cache',
+      //     'priority': 'u=1, i',
+      //     'sec-ch-ua': '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+      //     'sec-ch-ua-mobile': '?0',
+      //     'sec-ch-ua-platform': '"macOS"',
+      //     'sec-fetch-dest': 'empty',
+      //     'sec-fetch-mode': 'cors',
+      //     'sec-fetch-site': 'same-origin',
+      //     'wallet-authorization': resJson.jwt
+      //   },
+      //   'referrer': 'https://walletbot.me/scw/import/existing?backPath=none',
+      //   'referrerPolicy': 'strict-origin-when-cross-origin',
+      //   'body': '{"address":"0:7d74bf640fa7270b5bb0fb750e566df0597b2c8794067775c9e60d5ff9c8fef5"}',
+      //   'method': 'POST',
+      //   'mode': 'cors',
+      //   'credentials': 'include'
+      // });
+      // fetch("https://walletbot.me/v2api/recovery-keys/recover", {
+      //   "headers": {
+      //     "accept": "application/json, text/plain, */*",
+      //     "accept-language": "zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7",
+      //     "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2NzQ1MDQzNywid2ViX3ZpZXdfaW5pdF9kYXRhIjp7InF1ZXJ5X2lkIjpudWxsLCJ1c2VyIjp7ImlkIjo1NDkyNDc4MjYwLCJpc19ib3QiOm51bGwsImZpcnN0X25hbWUiOiJFdGhhbiIsImxhc3RfbmFtZSI6IiIsInVzZXJuYW1lIjoiZXRoYW55eXp6IiwibGFuZ3VhZ2VfY29kZSI6InpoLWhhbnMiLCJhbGxvd3Nfd3JpdGVfdG9fcG0iOnRydWUsInBob3RvX3VybCI6Imh0dHBzOi8vdC5tZS9pL3VzZXJwaWMvMzIwLzF1RmxyZDJWemFtclpaS1JQeGNJNjdpN1BDRks0MjNjUGpGMkRXdEFRYUVNdXBySE1tZFpmTFBBakFJLXdLYlUuc3ZnIiwiYWRkZWRfdG9fYXR0YWNobWVudF9tZW51Ijp0cnVlfSwicmVjZWl2ZXIiOm51bGwsInN0YXJ0X3BhcmFtIjoidG9uY29ubmVjdC12X18yLWlkX19iNjNiMzA3NWZlYmNhZmM3NzYwYmJkODI4MGM1ZGE0YTRjMDRhZGY0Y2NmMDI4NzVjOGQ5NjNlOThiMTkwMjEzLXJfXy0tN0ItLTIybWFuaWZlc3RVcmwtLTIyLS0zQS0tMjJodHRwcy0tM0EtLTJGLS0yRnJhdy0tMkVnaXRodWJ1c2VyY29udGVudC0tMkVjb20tLTJGSXRWZW4tLTJGdGVsZWdyYW0tLTJEYm90LS0yRGRlbW8tLTJGbWFpbi0tMkZ0b25jb25uZWN0LS0yRG1hbmlmZXN0LS0yRWpzb24tLTIyLS0yQy0tMjJpdGVtcy0tMjItLTNBLS01Qi0tN0ItLTIybmFtZS0tMjItLTNBLS0yMnRvbi0tNUZhZGRyLS0yMi0tN0QtLTJDLS03Qi0tMjJuYW1lLS0yMi0tM0EtLTIydG9uLS01RnByb29mLS0yMi0tMkMtLTIycGF5bG9hZC0tMjItLTNBLS0yMmRvY2V4YW1wbGUtLTNDQkFDS0VORC0tNUZBVVRILS01RklELS0zRS0tMjItLTdELS01RC0tN0QiLCJhdXRoX2RhdGUiOjE3MjI1MTAxMjgsImhhc2giOiJlYzU0ODhjZWM0ODVlM2IxNWNiMDJlMjkxZGUwZDNlMjc0ZDdiZjAxMmRiMjkyYjBhZDdmZWMzMDFlNmI0ODQ3IiwiY291bnRyeV9jb2RlX2J5X2lwIjoiSEsifSwid2FsbGV0X2RhdGEiOm51bGwsIm1haW5fZGF0YSI6ImdBQUFBQUJtcTJzeTFKUmJ2S3ltT3dPYkxYMlEtVUg5Z3M5cEdNckVRVEZSa0pYN29sME9nc3d5MWFtZkNsUldVZWJaTFVld0Nvc0ZjYVpxUjJfdkpram1yVTRHSU1SRTYwd0NwSDkzQ0l3cjNIMk5ONnI3Z3dHZC1YUGFZYUh1SFdHalo5U040ZHBDOWZ6a1pqR2FaNVJhYkdHQlpVdGxDZDlHbkhSU056TXY1dXhMQlVVUWJUSEpQOFV2MlNCdWtXWHNvZHlHT2wzX2d1V2lmVzRMSHZYMFpNcWJJOVR3SmRJQW9Wa285OXcwSjFUVC1Ua1lfTnVsV3hZUF92SXh1eVBGbDRxZEcySlNMS2pNSUJPU21pWVZQVUNnVE55bWNKMEVwaFo0YTBIMFdhMGhlUHd6Z284PSIsImV4cCI6MTcyMjUxMTkzMCwidmVyc2lvbiI6Mn0.4NnfnnIn1OAoiuIKFJopI2NqLcQFXFo2xsGkFzzzWzc",
+      //     "cache-control": "no-cache",
+      //     "content-type": "application/json",
+      //     "pragma": "no-cache",
+      //     "priority": "u=1, i",
+      //     "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+      //     "sec-ch-ua-mobile": "?0",
+      //     "sec-ch-ua-platform": "\"macOS\"",
+      //     "sec-fetch-dest": "empty",
+      //     "sec-fetch-mode": "cors",
+      //     "sec-fetch-site": "same-origin"
+      //   },
+      //   "referrer": "https://walletbot.me/scw/import/existing?backPath=none",
+      //   "referrerPolicy": "strict-origin-when-cross-origin",
+      //   "body": "{\"scwAddressId\":\"tonspace-2zNZfJIcZVaWZk3l\",\"emailCode\":\"787623\"}",
+      //   "method": "POST",
+      //   "mode": "cors",
+      //   "credentials": "include"
+      // });
       PopupElement.createPopup(PopupWebApp, {
         webViewResultUrl,
         webViewOptions: options as RequestWebViewOptions,

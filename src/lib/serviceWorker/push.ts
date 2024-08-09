@@ -134,6 +134,7 @@ for(const i in defaults) {
 }
 
 ctx.addEventListener('push', (event) => {
+  console.log('here listen push', event)
   const obj: PushNotificationObject = event.data.json();
   log('push', {...obj});
 

@@ -183,7 +183,7 @@ export default function SolanaActionBox(props: {
   const previewResizer = ActionBoxIcon(props.actionsGet.icon);
 
   const contentDiv = (
-    <div class={classNames(`${className}-content`)}>
+    <div class={classNames(`${className}-content`, 'actions-box')}>
       {previewResizer}
       {siteName}
       {titleDiv}

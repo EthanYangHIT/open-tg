@@ -156,9 +156,12 @@ export class UiNotificationsManager {
       });
     }
 
+    console.log('webPushApiManager.addEventListener(push_init');
+
     webPushApiManager.addEventListener('push_init', (tokenData) => {
       this.pushInited = true;
       if(!this.settings.nodesktop && !this.settings.nopush) {
+        console.log('webPushApiManager.addEventListener(push_init');
         if(tokenData) {
           this.registerDevice(tokenData);
         } else {
@@ -169,6 +172,7 @@ export class UiNotificationsManager {
       }
     });
     webPushApiManager.addEventListener('push_subscribe', (tokenData) => {
+      console.log('registerDevice', tokenData);
       this.registerDevice(tokenData);
     });
     webPushApiManager.addEventListener('push_unsubscribe', (tokenData) => {

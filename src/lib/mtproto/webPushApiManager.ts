@@ -102,9 +102,11 @@ export class WebPushApiManager extends EventListenerBase<{
     navigator.serviceWorker.ready.then((reg) => {
       reg.pushManager.subscribe({userVisibleOnly: this.userVisibleOnly}).then((subscription) => {
         // The subscription was successful
+        console.log('reg.pushManager.subscribe success', subscription)
         this.isPushEnabled = true;
         this.pushSubscriptionNotify('subscribe', subscription);
       }).catch((e) => {
+        console.log('reg.pushManager.subscribe denied', e);
         if(Notification.permission === 'denied') {
           this.log('Permission for Notifications was denied');
         } else {

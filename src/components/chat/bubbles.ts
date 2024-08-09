@@ -5978,20 +5978,20 @@ export default class ChatBubbles {
 
           processedWebPage = true;
 
-          const solanaActionRes = await detectSolanaAction(webPage.url)
-          if(solanaActionRes) {
-            // is actions
-            createRoot((dispose) => {
-              middleware.onDestroy(dispose);
-              SolanaActionBox({
-                ...solanaActionRes,
-                ref: (box) => {
-                  messageDiv.prepend(box);
-                }
-              });
-            });
-            break;
-          }
+          // const solanaActionRes = await detectSolanaAction(webPage.url)
+          // if(solanaActionRes) {
+          //   // is actions
+          //   createRoot((dispose) => {
+          //     middleware.onDestroy(dispose);
+          //     SolanaActionBox({
+          //       ...solanaActionRes,
+          //       ref: (box) => {
+          //         messageDiv.prepend(box);
+          //       }
+          //     });
+          //   });
+          //   break;
+          // }
 
           const storyAttribute = webPage.attributes?.find((attribute) => attribute._ === 'webPageAttributeStory') as WebPageAttribute.webPageAttributeStory;
           const storyPeerId = storyAttribute && getPeerId(storyAttribute.peer);
@@ -6277,16 +6277,24 @@ export default class ChatBubbles {
             WebPageBox({
               ...props,
               ref: (box) => {
-                boxRefs.forEach((ref) => ref(box));
-                if(factCheckBox && !invertMedia) {
-                  factCheckBox.before(box);
-                } else if(timeSpan) {
-                  if(invertMedia) {
-                    timeSpan.parentElement.prepend(box);
-                    box.parentElement.classList.add('mt-bigger');
-                  } else timeSpan.before(box);
+                console.log('box.classList: ', box.classList)
+                if(!box.firstElementChild?.classList.contains('actions-box')) {
+                  boxRefs.forEach((ref) => ref(box as HTMLAnchorElement));
+                  if(factCheckBox && !invertMedia) {
+                    factCheckBox.before(box);
+                  } else if(timeSpan) {
+                    if(invertMedia) {
+                      timeSpan.parentElement.prepend(box);
+                      box.parentElement.classList.add('mt-bigger');
+                    } else timeSpan.before(box);
+                  } else {
+                    messageDiv.append(box);
+                  }
                 } else {
-                  messageDiv.append(box);
+                  console.log('webpagebox ref callback prepend', messageDiv.lastChild)
+                  const webpage = messageDiv.querySelector('.webpage')
+                  messageDiv.removeChild(webpage)
+                  messageDiv.prepend(box);
                 }
               },
               clickable: true
